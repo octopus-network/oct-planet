@@ -1,0 +1,12 @@
+syntax = "proto3";
+package octpallet.octpallet;
+
+import "gogoproto/gogo.proto";
+import "octpallet/octpallet/params.proto";
+
+option go_package = "oct-pallet/x/octpallet/types";
+
+// GenesisState defines the octpallet module's genesis state.
+message GenesisState {
+  Params params = 1 [(gogoproto.nullable) = false];
+}

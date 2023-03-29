@@ -1,0 +1,7 @@
+syntax = "proto3";
+package octpallet.octpallet;
+
+option go_package = "oct-pallet/x/octpallet/types";
+
+// Msg defines the Msg service.
+service Msg {}
