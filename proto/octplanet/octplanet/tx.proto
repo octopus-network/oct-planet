@@ -1,0 +1,7 @@
+syntax = "proto3";
+package octplanet.octplanet;
+
+option go_package = "oct-planet/x/octplanet/types";
+
+// Msg defines the Msg service.
+service Msg {}

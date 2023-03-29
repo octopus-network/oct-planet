@@ -5,15 +5,19 @@
 In this repository we will be working with the [Hermes IBC Relayer](https://hermes.informal.systems) in order to transfer fungible tokens ([ics-020](https://github.com/cosmos/ics/tree/master/spec/ics-020-fungible-token-transfer)) between two [ignite](https://ignite.com/) custom [Cosmos SDK](https://github.com/cosmos/cosmos-sdk) chains.
 
 ## Spin up two chains
+
 Follow this instructions to run the two chains
 
 ### -------------------------------
+
 ### Start earth
+
 ### -------------------------------
+
 Open a terminal prompt:
 
 ```
-cd /your/path/to/oct-pallet
+cd /your/path/to/oct-planet
 
 ignite chain serve -v -c earth.yml
 ```
@@ -37,16 +41,19 @@ earth --node tcp://localhost:26657 query bank balances $(earth --home .earth key
 ```
 
 ### -------------------------------
+
 ### Start mars
+
 ### -------------------------------
 
 Open another terminal prompt:
 
 ```
-cd /your/path/to/oct-pallet
+cd /your/path/to/oct-planet
 
 ignite chain serve -v  -c mars.yml
 ```
+
 ### Restore key (Bob)
 
 Open another terminal prompt in the same location (mars folder)
@@ -64,9 +71,11 @@ gaze clay walk tail shove sphere follow twenty agent basket viable gun popular d
 mars --node tcp://localhost:26658 query bank balances $(mars --home .mars keys --keyring-backend="test" show bob -a)
 
 ```
+
 ## Install and config hermes
 
 ### Install hermes.
+
 Please follow the [instructions to install](https://hermes.informal.systems/installation.html) it locally on your mahcine.
 
 ### Configure Keys for hermes
@@ -91,6 +100,7 @@ hermes --config hermes.toml keys list --chain mars
 ```
 
 ## Test Case
+
 ### Create client
 
 Create a mars client on earth:

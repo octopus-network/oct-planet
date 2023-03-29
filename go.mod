@@ -1,4 +1,4 @@
-module oct-pallet
+module oct-planet
 
 go 1.19
 

@@ -45152,10 +45152,10 @@ paths:
                         }
       tags:
         - Query
-  /oct-pallet/octpallet/params:
+  /oct-planet/octplanet/params:
     get:
       summary: Parameters queries the parameters of the module.
-      operationId: OctpalletOctpalletParams
+      operationId: OctplanetOctplanetParams
       responses:
         '200':
           description: A successful response.
@@ -74727,10 +74727,10 @@ definitions:
     description: |-
       Version defines the versioning scheme used to negotiate the IBC verison in
       the connection handshake.
-  octpallet.octpallet.Params:
+  octplanet.octplanet.Params:
     type: object
     description: Params defines the parameters for the module.
-  octpallet.octpallet.QueryParamsResponse:
+  octplanet.octplanet.QueryParamsResponse:
     type: object
     properties:
       params:

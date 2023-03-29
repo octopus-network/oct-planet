@@ -1,0 +1,12 @@
+syntax = "proto3";
+package octplanet.octplanet;
+
+import "gogoproto/gogo.proto";
+import "octplanet/octplanet/params.proto";
+
+option go_package = "oct-planet/x/octplanet/types";
+
+// GenesisState defines the octplanet module's genesis state.
+message GenesisState {
+  Params params = 1 [(gogoproto.nullable) = false];
+}

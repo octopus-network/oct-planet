@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"oct-pallet/app"
+	"oct-planet/app"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/crypto/hd"

@@ -103,18 +103,18 @@ import (
 	tmos "github.com/tendermint/tendermint/libs/os"
 	dbm "github.com/tendermint/tm-db"
 
-	octpalletmodule "oct-pallet/x/octpallet"
-	octpalletmodulekeeper "oct-pallet/x/octpallet/keeper"
-	octpalletmoduletypes "oct-pallet/x/octpallet/types"
+	octplanetmodule "oct-planet/x/octplanet"
+	octplanetmodulekeeper "oct-planet/x/octplanet/keeper"
+	octplanetmoduletypes "oct-planet/x/octplanet/types"
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 
-	appparams "oct-pallet/app/params"
-	"oct-pallet/docs"
+	appparams "oct-planet/app/params"
+	"oct-planet/docs"
 )
 
 const (
 	AccountAddressPrefix = "cosmos"
-	Name                 = "oct-pallet"
+	Name                 = "oct-planet"
 )
 
 // this line is used by starport scaffolding # stargate/wasm/app/enabledProposals
@@ -164,7 +164,7 @@ var (
 		transfer.AppModuleBasic{},
 		ica.AppModuleBasic{},
 		vesting.AppModuleBasic{},
-		octpalletmodule.AppModuleBasic{},
+		octplanetmodule.AppModuleBasic{},
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
 	)
 
@@ -238,7 +238,7 @@ type App struct {
 	ScopedTransferKeeper capabilitykeeper.ScopedKeeper
 	ScopedICAHostKeeper  capabilitykeeper.ScopedKeeper
 
-	OctpalletKeeper octpalletmodulekeeper.Keeper
+	OctplanetKeeper octplanetmodulekeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
 	// mm is the module manager
@@ -283,7 +283,7 @@ func New(
 		paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey, feegrant.StoreKey, evidencetypes.StoreKey,
 		ibctransfertypes.StoreKey, icahosttypes.StoreKey, capabilitytypes.StoreKey, group.StoreKey,
 		icacontrollertypes.StoreKey,
-		octpalletmoduletypes.StoreKey,
+		octplanetmoduletypes.StoreKey,
 		// this line is used by starport scaffolding # stargate/app/storeKey
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
@@ -495,13 +495,13 @@ func New(
 		govConfig,
 	)
 
-	app.OctpalletKeeper = *octpalletmodulekeeper.NewKeeper(
+	app.OctplanetKeeper = *octplanetmodulekeeper.NewKeeper(
 		appCodec,
-		keys[octpalletmoduletypes.StoreKey],
-		keys[octpalletmoduletypes.MemStoreKey],
-		app.GetSubspace(octpalletmoduletypes.ModuleName),
+		keys[octplanetmoduletypes.StoreKey],
+		keys[octplanetmoduletypes.MemStoreKey],
+		app.GetSubspace(octplanetmoduletypes.ModuleName),
 	)
-	octpalletModule := octpalletmodule.NewAppModule(appCodec, app.OctpalletKeeper, app.AccountKeeper, app.BankKeeper)
+	octplanetModule := octplanetmodule.NewAppModule(appCodec, app.OctplanetKeeper, app.AccountKeeper, app.BankKeeper)
 
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 
@@ -568,7 +568,7 @@ func New(
 		params.NewAppModule(app.ParamsKeeper),
 		transferModule,
 		icaModule,
-		octpalletModule,
+		octplanetModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 
@@ -598,7 +598,7 @@ func New(
 		group.ModuleName,
 		paramstypes.ModuleName,
 		vestingtypes.ModuleName,
-		octpalletmoduletypes.ModuleName,
+		octplanetmoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/beginBlockers
 	)
 
@@ -623,7 +623,7 @@ func New(
 		paramstypes.ModuleName,
 		upgradetypes.ModuleName,
 		vestingtypes.ModuleName,
-		octpalletmoduletypes.ModuleName,
+		octplanetmoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/endBlockers
 	)
 
@@ -653,7 +653,7 @@ func New(
 		paramstypes.ModuleName,
 		upgradetypes.ModuleName,
 		vestingtypes.ModuleName,
-		octpalletmoduletypes.ModuleName,
+		octplanetmoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 	)
 
@@ -683,7 +683,7 @@ func New(
 		evidence.NewAppModule(app.EvidenceKeeper),
 		ibc.NewAppModule(app.IBCKeeper),
 		transferModule,
-		octpalletModule,
+		octplanetModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 	app.sm.RegisterStoreDecoders()
@@ -888,7 +888,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(ibchost.ModuleName)
 	paramsKeeper.Subspace(icacontrollertypes.SubModuleName)
 	paramsKeeper.Subspace(icahosttypes.SubModuleName)
-	paramsKeeper.Subspace(octpalletmoduletypes.ModuleName)
+	paramsKeeper.Subspace(octplanetmoduletypes.ModuleName)
 	// this line is used by starport scaffolding # stargate/app/paramSubspace
 
 	return paramsKeeper
