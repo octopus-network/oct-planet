@@ -4,3 +4,8 @@ release/
 .idea/
 .vscode/
 .DS_Store
+.earth
+.mars
+*.log
+*.pyc
+*.pyo

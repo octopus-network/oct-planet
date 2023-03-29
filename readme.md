@@ -1,52 +1,108 @@
-# octpallet
-**octpallet** is a blockchain built using Cosmos SDK and Tendermint and created with [Ignite CLI](https://ignite.com/cli).
+# OCT Pallet
 
-## Get started
+## Introduction
 
-```
-ignite chain serve
-```
+In this repository we will be working with the [Hermes IBC Relayer](https://hermes.informal.systems) in order to transfer fungible tokens ([ics-020](https://github.com/cosmos/ics/tree/master/spec/ics-020-fungible-token-transfer)) between two [ignite](https://ignite.com/) custom [Cosmos SDK](https://github.com/cosmos/cosmos-sdk) chains.
 
-`serve` command installs dependencies, builds, initializes, and starts your blockchain in development.
+## Spin up two chains
+Follow this instructions to run the two chains
 
-### Configure
-
-Your blockchain in development can be configured with `config.yml`. To learn more, see the [Ignite CLI docs](https://docs.ignite.com).
-
-### Web Frontend
-
-Ignite CLI has scaffolded a Vue.js-based web app in the `vue` directory. Run the following commands to install dependencies and start the app:
+### -------------------------------
+### Start earth
+### -------------------------------
+Open a terminal prompt:
 
 ```
-cd vue
-npm install
-npm run serve
+cd /your/path/to/oct-pallet
+
+ignite chain serve -v -c earth.yml
 ```
 
-The frontend app is built using the `@starport/vue` and `@starport/vuex` packages. For details, see the [monorepo for Ignite front-end development](https://github.com/ignite/web).
+### Restore key (Alice)
 
-## Release
-To release a new version of your blockchain, create and push a new tag with `v` prefix. A new draft release with the configured targets will be created.
+Open another terminal prompt in the same location (earth folder)
 
-```
-git tag v0.1
-git push origin v0.1
-```
-
-After a draft release is created, make your final changes from the release page and publish it.
-
-### Install
-To install the latest version of your blockchain node's binary, execute the following command on your machine:
+This command restores a key for a user in `earth` that we will be using during the workshop.
 
 ```
-curl https://get.ignite.com/username/oct-pallet@latest! | sudo bash
+# restore the key for alice
+earth keys add alice --recover --home .earth
+
+# When prompted for the mnemonic please enter the following words:
+picture switch picture soap flip dawn nerve easy rebuild company hawk stand menu rhythm unfold engine rug rally weapon raccoon glide mosquito lion dog
+
+# query Alice's balance
+earth --node tcp://localhost:26657 query bank balances $(earth --home .earth keys --keyring-backend="test" show alice -a)
+
 ```
-`username/oct-pallet` should match the `username` and `repo_name` of the Github repository to which the source code was pushed. Learn more about [the install process](https://github.com/allinbits/starport-installer).
 
-## Learn more
+### -------------------------------
+### Start mars
+### -------------------------------
 
-- [Ignite CLI](https://ignite.com/cli)
-- [Tutorials](https://docs.ignite.com/guide)
-- [Ignite CLI docs](https://docs.ignite.com)
-- [Cosmos SDK docs](https://docs.cosmos.network)
-- [Developer Chat](https://discord.gg/ignite)
+Open another terminal prompt:
+
+```
+cd /your/path/to/oct-pallet
+
+ignite chain serve -v  -c mars.yml
+```
+### Restore key (Bob)
+
+Open another terminal prompt in the same location (mars folder)
+
+This command restores a key for a user in `mars` that we will be using during the workshop.
+
+```
+# restore the key for bob
+mars keys add bob --recover --home .mars
+
+# When prompted for the mnemonic please enter the following words:
+gaze clay walk tail shove sphere follow twenty agent basket viable gun popular decide vanish coyote guilt carry toward exhaust hour six scout chest
+
+# query Bob's balance
+mars --node tcp://localhost:26658 query bank balances $(mars --home .mars keys --keyring-backend="test" show bob -a)
+
+```
+## Install and config hermes
+
+### Install hermes.
+Please follow the [instructions to install](https://hermes.informal.systems/installation.html) it locally on your mahcine.
+
+### Configure Keys for hermes
+
+#### Add keys for two chains
+
+These keys will be used by Hermes to sign transactions sent to each chain. The keys need to have a balance on each respective chain in order to pay for the transactions.
+
+```
+# add key for earth
+hermes --config hermes.toml keys add --chain earth --key-file alice_key.json
+# list keys
+hermes --config hermes.toml keys list --chain earth
+```
+
+```
+# add key for mars
+hermes --config hermes.toml keys add --chain mars --key-file bob_key.json
+# list keys
+hermes --config hermes.toml keys list --chain mars
+
+```
+
+## Test Case
+### Create client
+
+Create a mars client on earth:
+
+```
+hermes --config hermes.toml create client --host-chain earth --reference-chain mars
+```
+
+Create a earth client on mars
+
+```
+hermes --config hermes.toml create client --host-chain mars --reference-chain earth
+```
+
+### TODO: add other test cases
