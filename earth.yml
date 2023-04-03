@@ -3,35 +3,36 @@ build:
   binary: earth
   proto:
     path: proto
-    third_party_paths:
-    - third_party/proto
-    - proto_vendor
+    # third_party_paths:
+    # - third_party/proto
+    # - proto_vendor
 accounts:
 - name: alice
   coins:
-  - 20000000000000000000000ATOM
+  - 200000000oct
   - 200000000stake
-  address: cosmos1xh2jvz9ecty8qdctlgscmys2dr5gz729k0l7x4
-- name: earth-validator
+  # address: cosmos1xh2jvz9ecty8qdctlgscmys2dr5gz729k0l7x4
+  mnemonic: picture switch picture soap flip dawn nerve easy rebuild company hawk stand menu rhythm unfold engine rug rally weapon raccoon glide mosquito lion dog
+- name: faucet
   coins:
-  - 10000000ATOM
+  - 100000000oct
   - 100000000stake
 faucet:
-  name: earth-validator
+  name: faucet
   coins:
-  - 5ATOM
+  - 5oct
   - 100000stake
   host: 0.0.0.0:4500
   port: 4500
-client:
-  vuex:
-    path: vue/src/store
-  openapi:
-    path: docs/static/openapi.yml
+# client:
+#   vuex:
+#     path: vue/src/store
+#   openapi:
+#     path: docs/static/openapi.yml
 genesis:
   chain_id: earth
 validators:
-- name: earth-validator
+- name: alice
   bonded: 100000000stake
   app:
     api:
@@ -47,3 +48,7 @@ validators:
       laddr: 0.0.0.0:26657
       pprof_laddr: 0.0.0.0:6060
   home: ./.earth
+
+init:
+  config:
+    mode: "validator"

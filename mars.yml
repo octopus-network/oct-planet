@@ -3,37 +3,36 @@ build:
   binary: mars
   proto:
     path: proto
-    third_party_paths:
-    - third_party/proto
-    - proto_vendor
+    # third_party_paths:
+    # - third_party/proto
+    # - proto_vendor
 accounts:
 - name: bob
   coins:
-  - 20000000atom
+  - 200000000oct
   - 200000000stake
-  mnemonic: gaze clay walk tail shove sphere follow twenty agent basket viable gun
-    popular decide vanish coyote guilt carry toward exhaust hour six scout chest
-  address: cosmos1tuetpg9n9t8uhrzqgzvsmd5pylktylxjyhfhgz
-- name: mars-validator
+  # address: cosmos1tuetpg9n9t8uhrzqgzvsmd5pylktylxjyhfhgz
+  mnemonic: gaze clay walk tail shove sphere follow twenty agent basket viable gun popular decide vanish coyote guilt carry toward exhaust hour six scout chest
+- name: faucet
   coins:
-  - 10000000atom
+  - 100000000oct
   - 100000000stake
 faucet:
-  name: mars-validator
+  name: faucet
   coins:
-  - 5atom
+  - 5oct
   - 100000stake
   host: 0.0.0.0:4500
   port: 4600
-client:
-  vuex:
-    path: vue/src/store
-  openapi:
-    path: docs/static/openapi.yml
+# client:
+#   vuex:
+#     path: vue/src/store
+#   openapi:
+#     path: docs/static/openapi.yml
 genesis:
   chain_id: mars
 validators:
-- name: mars-validator
+- name: bob
   bonded: 100000000stake
   app:
     api:
@@ -49,3 +48,7 @@ validators:
       laddr: 0.0.0.0:26658
       pprof_laddr: 0.0.0.0:6061
   home: ./.mars
+
+init:
+  config:
+    mode: "validator"

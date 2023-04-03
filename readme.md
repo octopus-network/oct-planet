@@ -1,4 +1,4 @@
-# OCT Pallet
+# OCT planet
 
 ## Introduction
 
@@ -19,7 +19,7 @@ Open a terminal prompt:
 ```
 cd /your/path/to/oct-planet
 
-ignite chain serve -v -c earth.yml
+ignite chain serve -f -v -c earth.yml
 ```
 
 ### Restore key (Alice)
@@ -51,7 +51,7 @@ Open another terminal prompt:
 ```
 cd /your/path/to/oct-planet
 
-ignite chain serve -v  -c mars.yml
+ignite chain serve -f -v  -c mars.yml
 ```
 
 ### Restore key (Bob)
@@ -74,7 +74,7 @@ mars --node tcp://localhost:26658 query bank balances $(mars --home .mars keys -
 
 ## Install and config hermes
 
-### Install hermes.
+### Install hermes 
 
 Please follow the [instructions to install](https://hermes.informal.systems/installation.html) it locally on your mahcine.
 
@@ -115,4 +115,42 @@ Create a earth client on mars
 hermes --config hermes.toml create client --host-chain mars --reference-chain earth
 ```
 
-### TODO: add other test cases
+### create connection 
+
+```
+hermes --config hermes.toml create connection --a-chain earth --a-client 07-tendermint-0 --b-client 07-tendermint-0
+```
+
+### create channel 
+
+```
+hermes --config hermes.toml create channel --a-chain earth --a-connection connection-0 --a-port transfer --b-port transfer
+```
+
+### query channel
+```
+hermes --config hermes.toml query channels --show-counterparty --chain earth
+```
+
+### start hermes service 
+```
+hermes --config hermes.toml start
+```
+
+### transfer fungible token between earth and mars
+```
+# transfer 10000 atom from earth to mars
+hermes --config hermes.toml tx ft-transfer --timeout-seconds 1000 --dst-chain mars --src-chain earth --src-port transfer --src-channel channel-0 --denom oct --amount 100000
+
+# query account change
+earth --node tcp://localhost:26657 query bank balances $(earth --home .earth keys --keyring-backend="test" show alice -a)
+mars --node tcp://localhost:26658 query bank balances $(mars --home .mars keys --keyring-backend="test" show bob -a)
+
+# transfer back from mars to earth
+hermes --config hermes.toml tx ft-transfer --timeout-seconds 10000 --denom ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878 --dst-chain earth --src-chain mars --src-port transfer --src-channel channel-0 --amount 100000
+
+# query account change
+earth --node tcp://localhost:26657 query bank balances $(earth --home .earth keys --keyring-backend="test" show alice -a)
+mars --node tcp://localhost:26658 query bank balances $(mars --home .mars keys --keyring-backend="test" show bob -a)
+
+```
