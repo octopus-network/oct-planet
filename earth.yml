@@ -30,7 +30,7 @@ faucet:
 #   openapi:
 #     path: docs/static/openapi.yml
 genesis:
-  chain_id: earth
+  chain_id: earth-0
 validators:
 - name: alice
   bonded: 100000000stake
