@@ -124,7 +124,7 @@ require (
 	github.com/mitchellh/go-testing-interface v1.0.0 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/mtibben/percent v0.2.1 // indirect
-	github.com/octopus-network/beefy-go v0.3.0 // indirect
+	github.com/octopus-network/beefy-go v0.4.0 // indirect
 	github.com/octopus-network/trie-go v0.1.0 // indirect
 	github.com/pelletier/go-toml v1.9.5 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.5 // indirect
@@ -184,7 +184,7 @@ replace github.com/vedhavyas/go-subkey => github.com/vedhavyas/go-subkey v1.0.2
 
 replace github.com/ChainSafe/go-schnorrkel => github.com/ChainSafe/go-schnorrkel v0.0.0-20200405005733-88cbf1b4c40d
 
-replace github.com/cosmos/ibc-go/v6 => github.com/octopus-network/ibc-go/v6 v6.1.0-ics10.4
+replace github.com/cosmos/ibc-go/v6 => github.com/octopus-network/ibc-go/v6 v6.1.0-ics10.5
 
 // for dev
 // replace github.com/cosmos/ibc-go/v6 => ../ibc-go

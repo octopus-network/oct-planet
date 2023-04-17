@@ -776,10 +776,10 @@ github.com/neilotoole/errgroup v0.1.6/go.mod h1:Q2nLGf+594h0CLBs/Mbg6qOr7GtqDK7C
 github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e/go.mod h1:zD1mROLANZcx1PVRCS0qkT7pwLkGfwJo4zjcN/Tysno=
 github.com/nxadm/tail v1.4.4 h1:DQuhQpB1tVlglWS2hLQ5OV6B5r8aGxSrPc5Qo6uTN78=
 github.com/nxadm/tail v1.4.4/go.mod h1:kenIhsEOeOJmVchQTgglprH7qJGnHDVpk1VPCcaMI8A=
-github.com/octopus-network/beefy-go v0.3.0 h1:FPHlrpk6qDNcWM4i+R8u9+AJrVTjW6DABanCjNtF8b0=
-github.com/octopus-network/beefy-go v0.3.0/go.mod h1:qhTSf4HbwqW5otOnFk96pqQSqjRteKNVpOe+9Jqs4Xk=
-github.com/octopus-network/ibc-go/v6 v6.1.0-ics10.4 h1:NeYfFTMXkPdiajw8wZhe3aLhR3LVE64KRIuZkrXH+As=
-github.com/octopus-network/ibc-go/v6 v6.1.0-ics10.4/go.mod h1:NE4gOmw+0QxNgvAFZXhD+OV82CPe+f7W4yKNNNAFRpo=
+github.com/octopus-network/beefy-go v0.4.0 h1:rQ6eK03qyOF1wXN5aBh7uADtAVqMsxiWgaFZOjdAsIk=
+github.com/octopus-network/beefy-go v0.4.0/go.mod h1:qhTSf4HbwqW5otOnFk96pqQSqjRteKNVpOe+9Jqs4Xk=
+github.com/octopus-network/ibc-go/v6 v6.1.0-ics10.5 h1:JA0K1UzYdnKEjSIJroF5ZYiKUhvTguEw6cjA2tYxPqY=
+github.com/octopus-network/ibc-go/v6 v6.1.0-ics10.5/go.mod h1:/ISmgxjJ8+FUtfNPe7ZWIzAMBG99dkeiZHqELfUC3qs=
 github.com/octopus-network/trie-go v0.1.0 h1:NRvaRac2H3Q5wnEjyMEFahjV34SDccGb1nzxm5PkqZo=
 github.com/octopus-network/trie-go v0.1.0/go.mod h1:eiq61zcvD66lXiMHJCX3dy6BkhAg4S8KVqffsLWFIsg=
 github.com/oklog/oklog v0.3.2/go.mod h1:FCV+B7mhrz4o+ueLpx+KqkyXRGMWOYEvfiXtdGtbWGs=
