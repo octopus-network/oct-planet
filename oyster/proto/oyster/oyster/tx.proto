@@ -1,0 +1,7 @@
+syntax = "proto3";
+package oyster.oyster;
+
+option go_package = "oyster/x/oyster/types";
+
+// Msg defines the Msg service.
+service Msg {}

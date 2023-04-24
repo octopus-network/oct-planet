@@ -1,0 +1,12 @@
+syntax = "proto3";
+package oyster.oyster;
+
+import "gogoproto/gogo.proto";
+import "oyster/oyster/params.proto";
+
+option go_package = "oyster/x/oyster/types";
+
+// GenesisState defines the oyster module's genesis state.
+message GenesisState {
+  Params params = 1 [(gogoproto.nullable) = false];
+}

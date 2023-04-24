@@ -1,0 +1,12 @@
+syntax = "proto3";
+package oyster.oyster;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "oyster/x/oyster/types";
+
+// Params defines the parameters for the module.
+message Params {
+  option (gogoproto.goproto_stringer) = false;
+  
+}
