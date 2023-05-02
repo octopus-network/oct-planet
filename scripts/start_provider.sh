@@ -1,8 +1,6 @@
 #!/bin/bash
 set -eux
 
-source set_env.sh
-
 # Clean start
 killall $PROVIDER_BINARY &> /dev/null || true
 

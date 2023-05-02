@@ -1,8 +1,6 @@
 #!/bin/bash
 set -eux
 
-source set_env.sh
-
 # Setup Hermes in packet relayer mode
 killall hermes 2> /dev/null || true
 

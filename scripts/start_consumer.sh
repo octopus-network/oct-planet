@@ -1,8 +1,6 @@
 #!/bin/bash
 set -eux
 
-source set_env.sh
-
 # Clean start
 killall $CONSUMER_BINARY &> /dev/null || true
 rm -rf $CONSUMER_HOME
