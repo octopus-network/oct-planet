@@ -1,6 +1,8 @@
 #!/bin/bash
 set -eux
 
+source set_env.sh
+
 # Setup Hermes in packet relayer mode
 killall hermes 2> /dev/null || true
 
@@ -79,10 +81,10 @@ hermes -j start &> ~/.hermes/logs &
 ############################################################
 
 PROVIDER_VALIDATOR_ADDRESS=$(jq -r .address $PROVIDER_HOME/keypair.json)
-DELEGATIONS=$($PROVIDER_BINARY q staking delegations $PROVIDER_VALIDATOR_ADDRESS --home $PROVIDER_HOME --node tcp://${PROVIDER_RPC_LADDR} -o json)
+DELEGATIONS=$($PROVIDER_BINARY_PATH q staking delegations $PROVIDER_VALIDATOR_ADDRESS --home $PROVIDER_HOME --node tcp://${PROVIDER_RPC_LADDR} -o json)
 OPERATOR_ADDR=$(echo $DELEGATIONS | jq -r .delegation_responses[0].delegation.validator_address)
 
-./$PROVIDER_BINARY tx staking delegate $OPERATOR_ADDR 50000000stake \
+$PROVIDER_BINARY_PATH tx staking delegate $OPERATOR_ADDR 50000000stake \
        --from $VALIDATOR \
        $KEYRING \
        --home $PROVIDER_HOME \

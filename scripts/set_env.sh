@@ -1,5 +1,4 @@
 #!/bin/bash
-set -eux
 
 CONSUMER_HOME="$HOME/.consumer"
 CONSUMER_HOME1="$HOME/.consumer1"
@@ -8,14 +7,16 @@ PROVIDER_HOME1="$HOME/.provider1"
 PROVIDER_CHAIN_ID="provider"
 CONSUMER_CHAIN_ID="consumer"
 CONSUMER_MONIKER="consumer"
-PROVIDER_MONIKER=provider
+PROVIDER_MONIKER="provider"
 VALIDATOR="validator"
 VALIDATOR1="validator1"
 CONSUMER_USER="consumer"
 KEYRING="--keyring-backend test"
 TX_FLAGS="--gas-adjustment 100 --gas auto"
 PROVIDER_BINARY="interchain-security-pd"
+PROVIDER_BINARY_PATH=$(which $PROVIDER_BINARY)
 CONSUMER_BINARY="interchain-security-cd"
+CONSUMER_BINARY_PATH=$(which $CONSUMER_BINARY)
 NODE_IP="localhost"
 PROVIDER_RPC_LADDR="$NODE_IP:26658"
 PROVIDER_GRPC_ADDR="$NODE_IP:9091"
@@ -30,4 +31,4 @@ TOTAL_COINS=100000000000stake
 STAKE_COINS=100000000stake
 TOTAL_COINS1=100000000000stake
 STAKE_COINS1=1000000stake
-PROVIDER_DELEGATOR=delegator
+PROVIDER_DELEGATOR="delegator"

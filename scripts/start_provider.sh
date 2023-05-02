@@ -1,5 +1,7 @@
 #!/bin/bash
-set -eux 
+set -eux
+
+source set_env.sh
 
 # Clean start
 killall $PROVIDER_BINARY &> /dev/null || true
@@ -7,62 +9,62 @@ killall $PROVIDER_BINARY &> /dev/null || true
 #######VALIDATOR1#######################
 rm -rf $PROVIDER_HOME
 
-./$PROVIDER_BINARY init $PROVIDER_MONIKER --home $PROVIDER_HOME --chain-id $PROVIDER_CHAIN_ID
+$PROVIDER_BINARY_PATH init $PROVIDER_MONIKER --home $PROVIDER_HOME --chain-id $PROVIDER_CHAIN_ID
 jq ".app_state.gov.voting_params.voting_period = \"3s\" | .app_state.staking.params.unbonding_time = \"600s\" | .app_state.provider.params.template_client.trusting_period = \"300s\"" \
    $PROVIDER_HOME/config/genesis.json > \
    $PROVIDER_HOME/edited_genesis.json && mv $PROVIDER_HOME/edited_genesis.json $PROVIDER_HOME/config/genesis.json
 sleep 1
 
 # Create account keypair
-./$PROVIDER_BINARY keys add $VALIDATOR --home $PROVIDER_HOME --keyring-backend test --output json > $PROVIDER_HOME/keypair.json 2>&1
+$PROVIDER_BINARY_PATH keys add $VALIDATOR --home $PROVIDER_HOME --keyring-backend test --output json > $PROVIDER_HOME/keypair.json 2>&1
 sleep 1
-./$PROVIDER_BINARY keys add $PROVIDER_DELEGATOR --home $PROVIDER_HOME --keyring-backend test --output json > $PROVIDER_HOME/keypair_delegator.json 2>&1
+$PROVIDER_BINARY_PATH keys add $PROVIDER_DELEGATOR --home $PROVIDER_HOME --keyring-backend test --output json > $PROVIDER_HOME/keypair_delegator.json 2>&1
 sleep 1
 
 # Add stake to user
-./$PROVIDER_BINARY add-genesis-account $(jq -r .address $PROVIDER_HOME/keypair.json) $TOTAL_COINS --home $PROVIDER_HOME --keyring-backend test
+$PROVIDER_BINARY_PATH add-genesis-account $(jq -r .address $PROVIDER_HOME/keypair.json) $TOTAL_COINS --home $PROVIDER_HOME --keyring-backend test
 sleep 1
-./$PROVIDER_BINARY add-genesis-account $(jq -r .address $PROVIDER_HOME/keypair_delegator.json) $TOTAL_COINS --home $PROVIDER_HOME --keyring-backend test
+$PROVIDER_BINARY_PATH add-genesis-account $(jq -r .address $PROVIDER_HOME/keypair_delegator.json) $TOTAL_COINS --home $PROVIDER_HOME --keyring-backend test
 sleep 1
 
 # Stake 1/1000 user's coins
-./$PROVIDER_BINARY gentx $VALIDATOR $STAKE_COINS --chain-id $PROVIDER_CHAIN_ID --home $PROVIDER_HOME --keyring-backend test --moniker $VALIDATOR
+$PROVIDER_BINARY_PATH gentx $VALIDATOR $STAKE_COINS --chain-id $PROVIDER_CHAIN_ID --home $PROVIDER_HOME --keyring-backend test --moniker $VALIDATOR
 sleep 1
 
 ###########VALIDATOR 2############################
 rm -rf $PROVIDER_HOME1
 
-./$PROVIDER_BINARY init $PROVIDER_MONIKER --home $PROVIDER_HOME1 --chain-id $PROVIDER_CHAIN_ID
+$PROVIDER_BINARY_PATH init $PROVIDER_MONIKER --home $PROVIDER_HOME1 --chain-id $PROVIDER_CHAIN_ID
 cp $PROVIDER_HOME/config/genesis.json $PROVIDER_HOME1/config/genesis.json
 
 # Create account keypair
-./$PROVIDER_BINARY keys add $VALIDATOR1 --home $PROVIDER_HOME1 --keyring-backend test --output json > $PROVIDER_HOME1/keypair.json 2>&1
+$PROVIDER_BINARY_PATH keys add $VALIDATOR1 --home $PROVIDER_HOME1 --keyring-backend test --output json > $PROVIDER_HOME1/keypair.json 2>&1
 sleep 1
 
 # Add stake to user
-./$PROVIDER_BINARY add-genesis-account $(jq -r .address $PROVIDER_HOME1/keypair.json) $TOTAL_COINS1 --home $PROVIDER_HOME1 --keyring-backend test
+$PROVIDER_BINARY_PATH add-genesis-account $(jq -r .address $PROVIDER_HOME1/keypair.json) $TOTAL_COINS1 --home $PROVIDER_HOME1 --keyring-backend test
 sleep 1
 
 ####################GENTX AND DISTRIBUTE GENESIS##############################
 cp -r  $PROVIDER_HOME/config/gentx $PROVIDER_HOME1/config/
 
 # Stake 1/1000 user's coins
-./$PROVIDER_BINARY gentx $VALIDATOR1 $STAKE_COINS1 --chain-id $PROVIDER_CHAIN_ID --home $PROVIDER_HOME1 --keyring-backend test --moniker $VALIDATOR1
+$PROVIDER_BINARY_PATH gentx $VALIDATOR1 $STAKE_COINS1 --chain-id $PROVIDER_CHAIN_ID --home $PROVIDER_HOME1 --keyring-backend test --moniker $VALIDATOR1
 sleep 1
 
-./$PROVIDER_BINARY collect-gentxs --home $PROVIDER_HOME1 --gentx-dir $PROVIDER_HOME1/config/gentx/
+$PROVIDER_BINARY_PATH collect-gentxs --home $PROVIDER_HOME1 --gentx-dir $PROVIDER_HOME1/config/gentx/
 sleep 1
 
 cp $PROVIDER_HOME1/config/genesis.json $PROVIDER_HOME/config/genesis.json
 
 ####################ADDING PEERS####################
-node=$(./$PROVIDER_BINARY tendermint show-node-id --home $PROVIDER_HOME)
-node1=$(./$PROVIDER_BINARY tendermint show-node-id --home $PROVIDER_HOME1)
+node=$($PROVIDER_BINARY_PATH tendermint show-node-id --home $PROVIDER_HOME)
+node1=$($PROVIDER_BINARY_PATH tendermint show-node-id --home $PROVIDER_HOME1)
 sed -i -r "/persistent_peers =/ s/= .*/= \"$node@localhost:26656\"/" "$PROVIDER_HOME1"/config/config.toml
 sed -i -r "/persistent_peers =/ s/= .*/= \"$node1@localhost:26666\"/" "$PROVIDER_HOME"/config/config.toml
 
 #################### Start the chain node1 ###################
-./$PROVIDER_BINARY start \
+$PROVIDER_BINARY_PATH start \
 	--home $PROVIDER_HOME \
 	--rpc.laddr tcp://$PROVIDER_RPC_LADDR \
 	--grpc.address $PROVIDER_GRPC_ADDR \
@@ -73,7 +75,7 @@ sed -i -r "/persistent_peers =/ s/= .*/= \"$node1@localhost:26666\"/" "$PROVIDER
     &> $PROVIDER_HOME/logs &
 
 #################### Start the chain node2 ###################
-./$PROVIDER_BINARY start \
+$PROVIDER_BINARY_PATH start \
 	--home $PROVIDER_HOME1 \
 	--rpc.laddr tcp://$PROVIDER_RPC_LADDR1 \
 	--grpc.address $PROVIDER_GRPC_ADDR1 \
@@ -101,10 +103,10 @@ tee $PROVIDER_HOME/consumer-proposal.json<<EOF
 }
 EOF
 
-./$PROVIDER_BINARY tx gov submit-proposal consumer-addition $PROVIDER_HOME/consumer-proposal.json \
+$PROVIDER_BINARY_PATH tx gov submit-proposal consumer-addition $PROVIDER_HOME/consumer-proposal.json \
 	--chain-id $PROVIDER_CHAIN_ID --node tcp://$PROVIDER_RPC_LADDR --from $VALIDATOR --home $PROVIDER_HOME --keyring-backend test -b block -y
 sleep 1
 
 # Vote yes to proposal
-./$PROVIDER_BINARY tx gov vote 1 yes --from $VALIDATOR --chain-id $PROVIDER_CHAIN_ID --node tcp://$PROVIDER_RPC_LADDR --home $PROVIDER_HOME -b block -y --keyring-backend test
+$PROVIDER_BINARY_PATH tx gov vote 1 yes --from $VALIDATOR --chain-id $PROVIDER_CHAIN_ID --node tcp://$PROVIDER_RPC_LADDR --home $PROVIDER_HOME -b block -y --keyring-backend test
 sleep 5
