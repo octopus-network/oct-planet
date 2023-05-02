@@ -11,21 +11,20 @@ Binaries:
 ### Commands
 
 ```sh
-rm -rf /Users/admin/.provider1
-rm -rf /Users/admin/.provider
-rm -rf /Users/admin/.consumer1
-rm -rf /Users/admin/.consumer
-bash set_env.sh
-bash start_provider.sh
-bash start_consumer.sh
-bash start_hermes.sh
+rm -rf $HOME/.provider1
+rm -rf $HOME/.provider
+rm -rf $HOME/.consumer1
+rm -rf $HOME/.consumer
+
+cd scripts
+bash run.sh
 ```
 
 ### Genesis modification script for consumer chain
 
 ```sh
 # Add ccv section
-if ! ./$PROVIDER_BINARY q provider consumer-genesis "$CONSUMER_CHAIN_ID" --node "$PROVIDER_NODE_ADDRESS" --output json > "$CONSUMER_HOME"/consumer_section.json;
+if ! $PROVIDER_BINARY_PATH q provider consumer-genesis "$CONSUMER_CHAIN_ID" --node "$PROVIDER_NODE_ADDRESS" --output json > "$CONSUMER_HOME"/consumer_section.json;
 then
        echo "Failed to get consumer genesis for the chain-id '$CONSUMER_CHAIN_ID'! Finalize genesis failed. For more details please check the log file in output directory."
        exit 1
