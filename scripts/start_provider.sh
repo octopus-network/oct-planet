@@ -10,7 +10,7 @@ killall $PROVIDER_BINARY &> /dev/null || true
 rm -rf $PROVIDER_HOME
 
 $PROVIDER_BINARY_PATH init $PROVIDER_MONIKER --home $PROVIDER_HOME --chain-id $PROVIDER_CHAIN_ID
-jq ".app_state.gov.voting_params.voting_period = \"3s\" | .app_state.staking.params.unbonding_time = \"600s\" | .app_state.provider.params.template_client.trusting_period = \"300s\"" \
+$JQ_BINARY_PATH ".app_state.gov.voting_params.voting_period = \"3s\" | .app_state.staking.params.unbonding_time = \"600s\" | .app_state.provider.params.template_client.trusting_period = \"300s\"" \
    $PROVIDER_HOME/config/genesis.json > \
    $PROVIDER_HOME/edited_genesis.json && mv $PROVIDER_HOME/edited_genesis.json $PROVIDER_HOME/config/genesis.json
 sleep 1
@@ -22,9 +22,9 @@ $PROVIDER_BINARY_PATH keys add $PROVIDER_DELEGATOR --home $PROVIDER_HOME --keyri
 sleep 1
 
 # Add stake to user
-$PROVIDER_BINARY_PATH add-genesis-account $(jq -r .address $PROVIDER_HOME/keypair.json) $TOTAL_COINS --home $PROVIDER_HOME --keyring-backend test
+$PROVIDER_BINARY_PATH add-genesis-account $($JQ_BINARY_PATH -r .address $PROVIDER_HOME/keypair.json) $TOTAL_COINS --home $PROVIDER_HOME --keyring-backend test
 sleep 1
-$PROVIDER_BINARY_PATH add-genesis-account $(jq -r .address $PROVIDER_HOME/keypair_delegator.json) $TOTAL_COINS --home $PROVIDER_HOME --keyring-backend test
+$PROVIDER_BINARY_PATH add-genesis-account $($JQ_BINARY_PATH -r .address $PROVIDER_HOME/keypair_delegator.json) $TOTAL_COINS --home $PROVIDER_HOME --keyring-backend test
 sleep 1
 
 # Stake 1/1000 user's coins
@@ -42,7 +42,7 @@ $PROVIDER_BINARY_PATH keys add $VALIDATOR1 --home $PROVIDER_HOME1 --keyring-back
 sleep 1
 
 # Add stake to user
-$PROVIDER_BINARY_PATH add-genesis-account $(jq -r .address $PROVIDER_HOME1/keypair.json) $TOTAL_COINS1 --home $PROVIDER_HOME1 --keyring-backend test
+$PROVIDER_BINARY_PATH add-genesis-account $($JQ_BINARY_PATH -r .address $PROVIDER_HOME1/keypair.json) $TOTAL_COINS1 --home $PROVIDER_HOME1 --keyring-backend test
 sleep 1
 
 ####################GENTX AND DISTRIBUTE GENESIS##############################

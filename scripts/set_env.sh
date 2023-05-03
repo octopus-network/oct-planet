@@ -1,5 +1,12 @@
 #!/bin/bash
 
+PROVIDER_BINARY="interchain-security-pd"
+CONSUMER_BINARY="interchain-security-cd"
+PROVIDER_BINARY_PATH=$(which $PROVIDER_BINARY)
+CONSUMER_BINARY_PATH=$(which $CONSUMER_BINARY)
+HERMES_BINARY_PATH=$(which hermes)
+JQ_BINARY_PATH=$(which jq)
+
 CONSUMER_HOME="$HOME/.consumer"
 CONSUMER_HOME1="$HOME/.consumer1"
 PROVIDER_HOME="$HOME/.provider"
@@ -13,11 +20,6 @@ VALIDATOR1="validator1"
 CONSUMER_USER="consumer"
 KEYRING="--keyring-backend test"
 TX_FLAGS="--gas-adjustment 100 --gas auto"
-PROVIDER_BINARY="interchain-security-pd"
-PROVIDER_BINARY_PATH=$(which $PROVIDER_BINARY)
-CONSUMER_BINARY="interchain-security-cd"
-CONSUMER_BINARY_PATH=$(which $CONSUMER_BINARY)
-HERMES_BINARY_PATH=$(which hermes)
 NODE_IP="localhost"
 PROVIDER_RPC_LADDR="$NODE_IP:26658"
 PROVIDER_GRPC_ADDR="$NODE_IP:9091"

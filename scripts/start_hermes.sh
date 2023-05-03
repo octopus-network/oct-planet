@@ -65,9 +65,9 @@ $HERMES_BINARY_PATH keys delete $CONSUMER_CHAIN_ID -a
 $HERMES_BINARY_PATH keys delete $PROVIDER_CHAIN_ID -a
 
 # Restore keys to hermes relayer
-$HERMES_BINARY_PATH keys restore --mnemonic "$(jq -r .mnemonic $CONSUMER_HOME/consumer_keypair.json)" $CONSUMER_CHAIN_ID
+$HERMES_BINARY_PATH keys restore --mnemonic "$($JQ_BINARY_PATH -r .mnemonic $CONSUMER_HOME/consumer_keypair.json)" $CONSUMER_CHAIN_ID
 # temp_start_provider.sh creates key pair and stores it in keypair.json
-$HERMES_BINARY_PATH keys restore --mnemonic "$(jq -r .mnemonic $PROVIDER_HOME/keypair.json)" $PROVIDER_CHAIN_ID
+$HERMES_BINARY_PATH keys restore --mnemonic "$($JQ_BINARY_PATH -r .mnemonic $PROVIDER_HOME/keypair.json)" $PROVIDER_CHAIN_ID
 
 sleep 5
 
@@ -80,9 +80,9 @@ $HERMES_BINARY_PATH -j start &> ~/.hermes/logs &
 
 ############################################################
 
-PROVIDER_VALIDATOR_ADDRESS=$(jq -r .address $PROVIDER_HOME/keypair.json)
+PROVIDER_VALIDATOR_ADDRESS=$($JQ_BINARY_PATH -r .address $PROVIDER_HOME/keypair.json)
 DELEGATIONS=$($PROVIDER_BINARY_PATH q staking delegations $PROVIDER_VALIDATOR_ADDRESS --home $PROVIDER_HOME --node tcp://${PROVIDER_RPC_LADDR} -o json)
-OPERATOR_ADDR=$(echo $DELEGATIONS | jq -r .delegation_responses[0].delegation.validator_address)
+OPERATOR_ADDR=$(echo $DELEGATIONS | $JQ_BINARY_PATH -r .delegation_responses[0].delegation.validator_address)
 
 $PROVIDER_BINARY_PATH tx staking delegate $OPERATOR_ADDR 50000000stake \
        --from $VALIDATOR \
