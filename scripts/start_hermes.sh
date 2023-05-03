@@ -61,13 +61,13 @@ websocket_addr = "ws://${PROVIDER_RPC_LADDR}/websocket"
 EOF
 
 # Delete all previous keys in relayer
-$HERMES_BINARY_PATH keys delete $CONSUMER_CHAIN_ID -a
-$HERMES_BINARY_PATH keys delete $PROVIDER_CHAIN_ID -a
+$HERMES_BINARY_PATH keys delete --chain $CONSUMER_CHAIN_ID --all
+$HERMES_BINARY_PATH keys delete --chain $PROVIDER_CHAIN_ID --all
 
 # Restore keys to hermes relayer
-$HERMES_BINARY_PATH keys restore --mnemonic "$($JQ_BINARY_PATH -r .mnemonic $CONSUMER_HOME/consumer_keypair.json)" $CONSUMER_CHAIN_ID
+$HERMES_BINARY_PATH keys add --chain $CONSUMER_CHAIN_ID --mnemonic-file "$($JQ_BINARY_PATH -r .mnemonic $CONSUMER_HOME/consumer_keypair.json)"
 # temp_start_provider.sh creates key pair and stores it in keypair.json
-$HERMES_BINARY_PATH keys restore --mnemonic "$($JQ_BINARY_PATH -r .mnemonic $PROVIDER_HOME/keypair.json)" $PROVIDER_CHAIN_ID
+$HERMES_BINARY_PATH keys add --chain $PROVIDER_CHAIN_ID --mnemonic-file "$($JQ_BINARY_PATH -r .mnemonic $PROVIDER_HOME/keypair.json)"
 
 sleep 5
 
