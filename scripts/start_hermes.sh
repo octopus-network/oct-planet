@@ -1,6 +1,8 @@
 #!/bin/bash
 set -eux
 
+source set_env.sh
+
 # Setup Hermes in packet relayer mode
 killall hermes 2> /dev/null || true
 
@@ -59,22 +61,22 @@ websocket_addr = "ws://${PROVIDER_RPC_LADDR}/websocket"
 EOF
 
 # Delete all previous keys in relayer
-hermes keys delete $CONSUMER_CHAIN_ID -a
-hermes keys delete $PROVIDER_CHAIN_ID -a
+$HERMES_BINARY_PATH keys delete $CONSUMER_CHAIN_ID -a
+$HERMES_BINARY_PATH keys delete $PROVIDER_CHAIN_ID -a
 
 # Restore keys to hermes relayer
-hermes keys restore --mnemonic "$(jq -r .mnemonic $CONSUMER_HOME/consumer_keypair.json)" $CONSUMER_CHAIN_ID
+$HERMES_BINARY_PATH keys restore --mnemonic "$(jq -r .mnemonic $CONSUMER_HOME/consumer_keypair.json)" $CONSUMER_CHAIN_ID
 # temp_start_provider.sh creates key pair and stores it in keypair.json
-hermes keys restore --mnemonic "$(jq -r .mnemonic $PROVIDER_HOME/keypair.json)" $PROVIDER_CHAIN_ID
+$HERMES_BINARY_PATH keys restore --mnemonic "$(jq -r .mnemonic $PROVIDER_HOME/keypair.json)" $PROVIDER_CHAIN_ID
 
 sleep 5
 
-hermes create connection $CONSUMER_CHAIN_ID --client-a 07-tendermint-0 --client-b 07-tendermint-0
-hermes create channel $CONSUMER_CHAIN_ID --port-a consumer --port-b provider -o ordered --channel-version 1 connection-0
+$HERMES_BINARY_PATH create connection $CONSUMER_CHAIN_ID --client-a 07-tendermint-0 --client-b 07-tendermint-0
+$HERMES_BINARY_PATH create channel $CONSUMER_CHAIN_ID --port-a consumer --port-b provider -o ordered --channel-version 1 connection-0
 
 sleep 1
 
-hermes -j start &> ~/.hermes/logs &
+$HERMES_BINARY_PATH -j start &> ~/.hermes/logs &
 
 ############################################################
 
