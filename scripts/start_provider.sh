@@ -89,8 +89,8 @@ sleep 10
 # Build consumer chain proposal file
 tee $PROVIDER_HOME/consumer-proposal.json<<EOF
 {
-    "title": "Create a chain",
-    "description": "Gonna be a great chain",
+    "title": "Create consumer chain",
+    "description": "First consumer chain",
     "chain_id": "consumer",
     "initial_height": {
         "revision_number": 0,
@@ -98,7 +98,13 @@ tee $PROVIDER_HOME/consumer-proposal.json<<EOF
     },
     "genesis_hash": "519df96a862c30f53e67b1277e6834ab4bd59dfdd08c781d1b7cf3813080fb28",
     "binary_hash": "09184916f3e85aa6fa24d3c12f1e5465af2214f13db265a52fa9f4617146dea5",
-    "spawn_time": "2022-06-01T09:10:00.000000000-00:00", 
+    "spawn_time": "2023-05-03T02:57:20.000000000-00:00",
+    "unbonding_period": 10000000000,
+    "ccv_timeout_period": 100000000000,
+    "transfer_timeout_period": 100000000000,
+    "consumer_redistribution_fraction": "0.75",
+    "blocks_per_distribution_transmission": 10,
+    "historical_entries": 10000,
     "deposit": "10000001stake"
 }
 EOF
