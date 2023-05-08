@@ -22,9 +22,11 @@ bash run.sh
 
 ### Genesis modification script for consumer chain
 
+After the `spawn_time` in `consumer-proposal.json`, the consumer genesis can be got.
+ 
 ```sh
 # Add ccv section
-if ! $PROVIDER_BINARY_PATH q provider consumer-genesis "$CONSUMER_CHAIN_ID" --node "$PROVIDER_NODE_ADDRESS" --output json > "$CONSUMER_HOME"/consumer_section.json;
+if ! $PROVIDER_BINARY_PATH query provider consumer-genesis "$CONSUMER_CHAIN_ID" --node "$PROVIDER_NODE_ADDRESS" --output json > "$CONSUMER_HOME"/consumer_section.json;
 then
        echo "Failed to get consumer genesis for the chain-id '$CONSUMER_CHAIN_ID'! Finalize genesis failed. For more details please check the log file in output directory."
        exit 1
@@ -50,4 +52,12 @@ jq -s '.[0].app_state.ccvconsumer = .[1] | .[0]' "$CONSUMER_HOME"/config/genesis
           "power": "100"
         }
       ],
+```
+
+### Hermes support for consumer chain
+
+Add the unbonding period for Consumer chain in `~/.hermes/config.toml`
+
+```toml
+unbonding_period = '20days'
 ```

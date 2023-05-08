@@ -4,7 +4,7 @@ set -eux
 source set_env.sh
 
 # Setup Hermes in packet relayer mode
-killall hermes 2> /dev/null || true
+pkill -f hermes 2> /dev/null || true
 
 tee ~/.hermes/config.toml<<EOF
 [global]
@@ -21,9 +21,9 @@ enabled = true
 [mode.packets]
 enabled = true
 [[chains]]
-account_prefix = "oct"
+account_prefix = "cosmos"
 clock_drift = "5s"
-gas_adjustment = 0.1
+gas_multiplier = 1.1
 grpc_addr = "tcp://${CONSUMER_GRPC_ADDR}"
 id = "$CONSUMER_CHAIN_ID"
 key_name = "relayer"
@@ -32,6 +32,7 @@ rpc_addr = "http://${CONSUMER_RPC_LADDR}"
 rpc_timeout = "10s"
 store_prefix = "ibc"
 trusting_period = "599s"
+unbonding_period = '20days'
 websocket_addr = "ws://${CONSUMER_RPC_LADDR}/websocket"
 [chains.gas_price]
        denom = "stake"
@@ -42,7 +43,7 @@ websocket_addr = "ws://${CONSUMER_RPC_LADDR}/websocket"
 [[chains]]
 account_prefix = "cosmos"
 clock_drift = "5s"
-gas_adjustment = 0.1
+gas_multiplier = 1.1
 grpc_addr = "tcp://${PROVIDER_GRPC_ADDR}"
 id = "$PROVIDER_CHAIN_ID"
 key_name = "relayer"
@@ -65,15 +66,25 @@ $HERMES_BINARY_PATH keys delete --chain $CONSUMER_CHAIN_ID --all
 $HERMES_BINARY_PATH keys delete --chain $PROVIDER_CHAIN_ID --all
 
 # Restore keys to hermes relayer
-$HERMES_BINARY_PATH keys add --chain $CONSUMER_CHAIN_ID --mnemonic-file "$($JQ_BINARY_PATH -r .mnemonic $CONSUMER_HOME/consumer_keypair.json)"
+echo "$($JQ_BINARY_PATH -r .mnemonic $CONSUMER_HOME/consumer_keypair.json)" > $CONSUMER_HOME/consumer_key.mnemonic
+$HERMES_BINARY_PATH keys add --chain $CONSUMER_CHAIN_ID --mnemonic-file $CONSUMER_HOME/consumer_key.mnemonic
 # temp_start_provider.sh creates key pair and stores it in keypair.json
-$HERMES_BINARY_PATH keys add --chain $PROVIDER_CHAIN_ID --mnemonic-file "$($JQ_BINARY_PATH -r .mnemonic $PROVIDER_HOME/keypair.json)"
+echo "$($JQ_BINARY_PATH -r .mnemonic $PROVIDER_HOME/keypair.json)" > $PROVIDER_HOME/provider_key.mnemonic
+$HERMES_BINARY_PATH keys add --chain $PROVIDER_CHAIN_ID --mnemonic-file $PROVIDER_HOME/provider_key.mnemonic
 
 sleep 5
 
-$HERMES_BINARY_PATH create connection $CONSUMER_CHAIN_ID --client-a 07-tendermint-0 --client-b 07-tendermint-0
-$HERMES_BINARY_PATH create channel $CONSUMER_CHAIN_ID --port-a consumer --port-b provider -o ordered --channel-version 1 connection-0
+# Create clients
+$HERMES_BINARY_PATH create client --host-chain $PROVIDER_CHAIN_ID --reference-chain $CONSUMER_CHAIN_ID
+$HERMES_BINARY_PATH create client --host-chain $CONSUMER_CHAIN_ID --reference-chain $PROVIDER_CHAIN_ID
+sleep 1
 
+# Create connections
+$HERMES_BINARY_PATH create connection --a-chain $CONSUMER_CHAIN_ID --a-client 07-tendermint-0 --b-client 07-tendermint-0
+sleep 1
+
+# Channel identifiers
+$HERMES_BINARY_PATH create channel --a-chain $CONSUMER_CHAIN_ID --a-connection connection-0 --a-port $CONSUMER_CHAIN_ID --b-port $PROVIDER_CHAIN_ID
 sleep 1
 
 $HERMES_BINARY_PATH -j start &> ~/.hermes/logs &

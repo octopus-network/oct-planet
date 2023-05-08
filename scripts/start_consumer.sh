@@ -4,7 +4,7 @@ set -eux
 source set_env.sh
 
 # Clean start
-killall $CONSUMER_BINARY &> /dev/null || true
+pkill -f $CONSUMER_BINARY &> /dev/null || true
 rm -rf $CONSUMER_HOME
 rm -rf $CONSUMER_HOME1
 
@@ -15,7 +15,7 @@ $CONSUMER_BINARY_PATH init --chain-id $CONSUMER_CHAIN_ID $CONSUMER_MONIKER --hom
 sleep 1
 
 # Add ccv section
-if ! $PROVIDER_BINARY_PATH q provider consumer-genesis "$CONSUMER_CHAIN_ID" --node "$PROVIDER_NODE_ADDRESS" --output json > "$CONSUMER_HOME"/consumer_section.json; 
+if ! $PROVIDER_BINARY_PATH query provider consumer-genesis "$CONSUMER_CHAIN_ID" --node "$PROVIDER_NODE_ADDRESS" --output json > "$CONSUMER_HOME"/consumer_section.json; 
 then
        echo "Failed to get consumer genesis for the chain-id '$CONSUMER_CHAIN_ID'! Finalize genesis failed. For more details please check the log file in output directory."
        exit 1
@@ -71,6 +71,7 @@ $CONSUMER_BINARY_PATH start \
        --log_level trace \
        --trace \
        &> $CONSUMER_HOME/logs &
+sleep 10
 
 $CONSUMER_BINARY_PATH start \
        --home $CONSUMER_HOME1 \
