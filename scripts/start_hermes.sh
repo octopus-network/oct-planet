@@ -84,7 +84,7 @@ $HERMES_BINARY_PATH create connection --a-chain $CONSUMER_CHAIN_ID --a-client 07
 sleep 1
 
 # Channel identifiers
-$HERMES_BINARY_PATH create channel --a-chain $CONSUMER_CHAIN_ID --a-connection connection-0 --a-port $CONSUMER_CHAIN_ID --b-port $PROVIDER_CHAIN_ID
+$HERMES_BINARY_PATH create channel --order ordered --channel-version 1 --a-chain $CONSUMER_CHAIN_ID --a-connection connection-0 --a-port $CONSUMER_CHAIN_ID --b-port $PROVIDER_CHAIN_ID
 sleep 1
 
 $HERMES_BINARY_PATH -j start &> ~/.hermes/logs &
