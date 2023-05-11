@@ -4,7 +4,6 @@ set -eux
 source set_env.sh
 
 # Setup Hermes in packet relayer mode
-pkill -f hermes 2> /dev/null || true
 
 tee ~/.hermes/config.toml<<EOF
 [global]
@@ -63,19 +62,22 @@ EOF
 
 # Delete all previous keys in relayer
 $HERMES_BINARY_PATH keys delete --chain $CONSUMER_CHAIN_ID --all
+sleep 1
 $HERMES_BINARY_PATH keys delete --chain $PROVIDER_CHAIN_ID --all
+sleep 1
 
 # Restore keys to hermes relayer
 echo "$($JQ_BINARY_PATH -r .mnemonic $CONSUMER_HOME/consumer_keypair.json)" > $CONSUMER_HOME/consumer_key.mnemonic
 $HERMES_BINARY_PATH keys add --chain $CONSUMER_CHAIN_ID --mnemonic-file $CONSUMER_HOME/consumer_key.mnemonic
+sleep 2
 # temp_start_provider.sh creates key pair and stores it in keypair.json
 echo "$($JQ_BINARY_PATH -r .mnemonic $PROVIDER_HOME/keypair.json)" > $PROVIDER_HOME/provider_key.mnemonic
 $HERMES_BINARY_PATH keys add --chain $PROVIDER_CHAIN_ID --mnemonic-file $PROVIDER_HOME/provider_key.mnemonic
-
-sleep 5
+sleep 2
 
 # Create clients
 $HERMES_BINARY_PATH create client --host-chain $PROVIDER_CHAIN_ID --reference-chain $CONSUMER_CHAIN_ID
+sleep 1
 $HERMES_BINARY_PATH create client --host-chain $CONSUMER_CHAIN_ID --reference-chain $PROVIDER_CHAIN_ID
 sleep 1
 
@@ -84,7 +86,7 @@ $HERMES_BINARY_PATH create connection --a-chain $CONSUMER_CHAIN_ID --a-client 07
 sleep 1
 
 # Channel identifiers
-$HERMES_BINARY_PATH create channel --order ordered --channel-version 1 --a-chain $CONSUMER_CHAIN_ID --a-connection connection-0 --a-port $CONSUMER_CHAIN_ID --b-port $PROVIDER_CHAIN_ID
+$HERMES_BINARY_PATH create channel --order ordered --a-chain $CONSUMER_CHAIN_ID --a-connection connection-0 --a-port $CONSUMER_CHAIN_ID --b-port $PROVIDER_CHAIN_ID
 sleep 1
 
 $HERMES_BINARY_PATH -j start &> ~/.hermes/logs &
@@ -92,7 +94,7 @@ $HERMES_BINARY_PATH -j start &> ~/.hermes/logs &
 ############################################################
 
 PROVIDER_VALIDATOR_ADDRESS=$($JQ_BINARY_PATH -r .address $PROVIDER_HOME/keypair.json)
-DELEGATIONS=$($PROVIDER_BINARY_PATH q staking delegations $PROVIDER_VALIDATOR_ADDRESS --home $PROVIDER_HOME --node tcp://${PROVIDER_RPC_LADDR} -o json)
+DELEGATIONS=$($PROVIDER_BINARY_PATH query staking delegations $PROVIDER_VALIDATOR_ADDRESS --home $PROVIDER_HOME --node tcp://${PROVIDER_RPC_LADDR} -o json)
 OPERATOR_ADDR=$(echo $DELEGATIONS | $JQ_BINARY_PATH -r .delegation_responses[0].delegation.validator_address)
 
 $PROVIDER_BINARY_PATH tx staking delegate $OPERATOR_ADDR 50000000stake \
