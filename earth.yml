@@ -9,18 +9,18 @@ build:
 accounts:
 - name: alice
   coins:
-  - 200000000oct
+  - 200000000ERT
   - 200000000stake
   # address: cosmos1xh2jvz9ecty8qdctlgscmys2dr5gz729k0l7x4
   mnemonic: picture switch picture soap flip dawn nerve easy rebuild company hawk stand menu rhythm unfold engine rug rally weapon raccoon glide mosquito lion dog
 - name: faucet
   coins:
-  - 100000000oct
+  - 100000000ERT
   - 100000000stake
 faucet:
   name: faucet
   coins:
-  - 5oct
+  - 5ERT
   - 100000stake
   host: 0.0.0.0:4500
   port: 4500

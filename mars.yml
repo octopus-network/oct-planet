@@ -9,18 +9,18 @@ build:
 accounts:
   - name: bob
     coins:
-      - 200000000oct
+      - 200000000MRT
       - 200000000stake
     # address: cosmos1tuetpg9n9t8uhrzqgzvsmd5pylktylxjyhfhgz
     mnemonic: gaze clay walk tail shove sphere follow twenty agent basket viable gun popular decide vanish coyote guilt carry toward exhaust hour six scout chest
   - name: faucet
     coins:
-      - 100000000oct
+      - 100000000MRT
       - 100000000stake
 faucet:
   name: faucet
   coins:
-    - 5oct
+    - 5MRT
     - 100000stake
   host: 0.0.0.0:4500
   port: 4600
